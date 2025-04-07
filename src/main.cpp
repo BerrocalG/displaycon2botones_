@@ -17,6 +17,7 @@ int main(void) {
             _delay_ms(50);              // Anti-rebote
 
             // Esperar a que se suelte el botón
+            while (!(PIND & 0x04)); //mientras el boton este precionado el numero cambiara
 
                 if (unidades > 9) {
                     _delay_ms(50);
@@ -34,10 +35,10 @@ int main(void) {
                     }
                 }
 
-                // Mostrar en PD4–PD7 (decenas)
-                PORTD = (PORTD & 0x0F) | (decenas << 4);
-                // Mostrar en PB0–PB3 (unidades)
-                PORTB = (PORTB & 0xF0) | (unidades & 0x0F);
+            // Mostrar en PD4–PD7 (decenas)
+            PORTD = (PORTD & 0x0F) | (decenas << 4);
+            // Mostrar en PB0–PB3 (unidades)
+            PORTB = (PORTB & 0xF0) | (unidades & 0x0F);
         }
     }
 
