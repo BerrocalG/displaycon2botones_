@@ -47,23 +47,25 @@ int main(void) {
                 while (!(PIND & 0x08)); // Esperar a que se suelte el botón
                 _delay_ms(50);
 
-                
+                if (!(unidades == 0 && decenas == 0)) { //
 
-                if (unidades == 0) {
-                    unidades = 9;    // Si las unidades están en 0, reiniciar a 9
-                    
-                    if (decenas > 0) {
-                        decenas--;   // Decrementa las decenas si son mayores que 0
+                    if (unidades == 0) {
+                        unidades = 9;    // Si las unidades están en 0, reiniciar a 9
+                        
+                        if (decenas > 0) {
+                            decenas--;   // Decrementa las decenas si son mayores que 0
+                        }
+                    } else {
+                        unidades--;     // Si no, solo decrementa las unidades
                     }
-                } else {
-                    unidades--;     // Si no, solo decrementa las unidades
-                }
-    
-                if (decenas > 9) {
-                    decenas = 0;    // Asegurarse que las decenas no superen 9
-                }
+        
+                    if (decenas > 9) {
+                        decenas = 0;    // Asegurarse que las decenas no superen 9
+                    }
 
+                }
             }
+
 
     
             // Mostrar en PD4–PD7 (decenas)
