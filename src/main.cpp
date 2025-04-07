@@ -1,24 +1,43 @@
-//codigo base para display con 2 botones tarea 1 sem 3.___
 #define F_CPU 16000000UL
 #include <avr/io.h>
 #include <util/delay.h>
 
 int main(void) {
-    // Configurar pines D4-D7 y B8-B12 como salida
-    DDRD |= 0xF0; // Configura PD4-PD7 como salida
-    DDRB |= 0x0F; // Configura PB0-PB4 (pines 8-12) como salida
+    DDRD |= 0xF0;            // PD4–PD7 como salida (decenas)
+    DDRB |= 0x0F;            // PB0–PB3 como salida (unidades)
+    
+    DDRD &= ~(0x04);     // PD3 como entrada (botón)
+    PORTD |= (0x04);     // Pull-up en PD3 (botón a GND)
 
-    DDRD &= ~(0x0C);  // Configura PD2 y PD3 como entrada para pulsadores
-    PORTD |= 0x0C;
-
+    uint8_t unidades = 0;
+    uint8_t decenas = 0;
 
     while (1) {
-        for (uint8_t decenas = 0; decenas < 10; decenas++) { // Decenas (0-9)
-            for (uint8_t unidad = 0; unidad < 10; unidad++) { // Unidades (0-9)
-                PORTD = (PORTD & 0x0F) | (decenas << 4); // PD4-PD7 = decenas
-                PORTB = (PORTB & 0xE0) | (unidad & 0x0F); // PB0-PB4 = unidades
-                _delay_ms(500);
-            }
+        if (!(PIND&0X04)) {     // Si el botón está presionado
+            _delay_ms(50);              // Anti-rebote
+
+            // Esperar a que se suelte el botón
+
+                if (unidades > 9) {
+                    _delay_ms(50);
+                    unidades = 0;
+                    decenas++;
+                }
+                    else {
+                    _delay_ms(50);
+
+                    unidades++;
+                    }
+                    if (decenas > 9) {
+                        _delay_ms(50);
+                        decenas = 0;
+                    }
+                }
+
+                // Mostrar en PD4–PD7 (decenas)
+                PORTD = (PORTD & 0x0F) | (decenas << 4);
+                // Mostrar en PB0–PB3 (unidades)
+                PORTB = (PORTB & 0xF0) | (unidades & 0x0F);
         }
     }
-}
+
