@@ -11,15 +11,22 @@ int main(void) {
     PORTD |= (0x04);         
     DDRD &= ~(0x08);         // botón para bajar
     PORTD |= (0x08);         
-    DDRB &= ~(0x20);         // botón para bajar
-    PORTB |= (0x20); 
+     DDRB &= ~(0x20);         // botón para bajar
+    PORTB |= (0x20);
+
+    DDRB &= ~(0x40);         // botón para enter
+    PORTB |= (0x40);
 
     uint8_t unidades = 0;    
     uint8_t decenas = 0;  
     
-    uint8_t guardadou=0;
-    uint8_t guardadod=0;
+    uint8_t guardadou1=0;
+    uint8_t guardadod1=0;
 
+    uint8_t guardadou2=0;
+    uint8_t guardadod2=0;
+
+    uint8_t respuesta=0;
     PORTD &= 0x0F;           
     PORTB &= 0xF0;           
 
@@ -76,18 +83,35 @@ int main(void) {
             _delay_ms(50);
 
             // para guardarlos numeros actuales
-            guardadou = unidades;
-            guardadod = decenas;
+            guardadou1 = unidades;
+            guardadod1 = decenas;
 
             // Resetear display
-            unidades = 0;
-            decenas = 0;
+           
+        }
+        // Botón de enter
+        if (!(PINB & 0x40)) {
+            _delay_ms(50);
+            while (!(PINB & 0x40));
+            _delay_ms(50);
+
+            guardadou2 = unidades;
+            guardadod2 = decenas;
+
+            if (guardadou1 >= guardadou2) {
+
+                unidades= guardadou1-guardadod2;
+                decenas= guardadod1-guardadod2;
+            }
+        } 
+
+            
         }
 
         PORTD = (PORTD & 0x0F) | (decenas << 4);   
         PORTB = (PORTB & 0xF0) | (unidades & 0x0F); 
     }
-}
+
 
 //display ascendente descendente
 /*
