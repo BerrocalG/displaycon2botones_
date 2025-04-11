@@ -1,4 +1,3 @@
-
 //codigoprueba tareaq
 #define F_CPU 16000000UL
 #include <avr/io.h>
@@ -30,6 +29,7 @@ int main(void) {
     char finald=0;
     char resultadou=0;
     char resultadod=0;
+
 
     PORTD &= 0x0F;           
     PORTB &= 0xF0;           
@@ -121,12 +121,48 @@ int main(void) {
             // para guardarlos numeros actuales
             unidades=0;
             decenas=0;
-          
+
+    
+
+          if (!(PINB & 0x10)&& (mate==1)) { // resta
+
+            finalu= unidades;
+            finald= decenas;
+            resultadou= (guardadou-finalu);
+            resultadod= (guardadod-finald);
+
+            }
+
+         if (!(PINB & 0x20)&& (mate==2)) { // sumar
+
+            finalu= unidades;
+            finald= decenas;
+            resultadou= (guardadou+finalu);
+            resultadod= (guardadod+finald);
+            
+            }
+
+            if (resultadou<0){
+            resultadou=0;
+            }
+            if (resultadou>9){
+            resultadou=9;
+            }
+             if (resultadod<0){
+            resultadod=0;
+            }
+             if (resultadod>9){
+            resultadod=9;
+             }
+        
+         unidades=resultadou;
+         decenas=resultadod;
+         mate=0;
+        }
+
         PORTD = (PORTD & 0x0F) | (decenas << 4);   
         PORTB = (PORTB & 0xF0) | (unidades & 0x0F); 
     }
-}
-
 }
 
 
